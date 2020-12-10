@@ -6,16 +6,18 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:58:51 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/06 18:24:20 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/10 14:09:54 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static size_t	ft_strlen(const char *str)
+size_t		ft_strlen(const char *str)
 {
 	size_t i;
 
+	if (str == 0)
+		return (0);
 	i = 0;
 	while (str[i] != '\0')
 	{
@@ -24,68 +26,70 @@ static size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-static char	*ft_strcpy(char *dest, const char *src)
+char	*ft_strcpy(char *line)
 {
 	int		i;
-	char	*my_src;
+	char	*old_line;
 
-	my_src = (char *)(src);
+	if (line == 0)
+		return (0);
+	if (!(old_line = malloc(sizeof(*old_line) * (ft_strlen(line) + 1))))
+		return (0);
+	//printf("Copying\n");
 	i = 0;
-	while (my_src[i] != '\0')
+	while (line[i] != '\0')
 	{
-		dest[i] = my_src[i];
+		old_line[i] = line[i];
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	old_line[i] = '\0';
+	//printf("Done\n");
+	return (old_line);
 }
 
-static char		*ft_strdup(const char *src)
+char	*ft_strcat_to(char *old_line, char *str_buff, char *new_line)
 {
-	char *str;
-	char *my_src;
+	int i;
+	int j;
 
-	my_src = (char *)(src);
-	if (!(str = malloc(sizeof(*str) * (ft_strlen(my_src) + 1))))
-		return (0);
-	return (ft_strcpy(str, my_src));
-}
-
-char	*ft_strjoin(char const *pref, char const *suff, int s)
-{
-	char	*ret;
-	char	*my_pref;
-	char	*my_suff;
-	size_t	i;
-	size_t	j;
-
-	if (pref == 0 && suff != 0)
+	i = 0;
+	j = 0;
+	if (old_line != 0)
 	{
-		my_suff = ft_strdup(suff);
-		return (my_suff);
+		while (old_line[i] != '\0')
+		{
+			new_line[i] = old_line[i];
+			i++;
+		}
 	}
-	if (suff == 0 && pref != 0)
+	while (str_buff[j] != '\0')
 	{
-		my_pref = ft_strdup(pref);
-		return (my_pref);
-	}
-	if (suff == 0 && pref == 0)
-		return (0);
-	i = -1;
-	j = -1;
-	my_pref = (char *)(pref);
-	my_suff = (char *)(&suff[s]);
-	if (!(ret = malloc(sizeof(char) * (ft_strlen(my_pref) + ft_strlen(my_suff) + 2))))
-		return (0);
-	while (my_pref[++i] != '\0')
-		ret[i] = pref[i];
-	if (s != 0)
-		ret[i++] = '\n';
-	while (my_suff[++j] != '\0')
-	{
-		ret[i] = my_suff[j];
+		new_line[i] = str_buff[j];
 		i++;
+		j++;
 	}
-	ret[i] = '\0';
-	return (ret);
+	new_line[i] = '\0';
+	return (new_line);
+}
+
+/*
+** Adds the read str_buff to *line. The necessary malloc size is line_size
+*/
+int			ft_save_to_line(char **line, char *str_buff, size_t line_size)
+{
+	char *old_line;
+
+	old_line = 0;
+	//printf("str_buff: %s\n", str_buff);
+	if (*line != 0)
+	{
+		//printf("Line != 0\n");
+		if (!(old_line = ft_strcpy(*line)))
+			return (0);
+	}
+	free(*line);
+	if (!(*line = malloc(sizeof(**line) * (line_size + 1))))
+		return (0);
+	*line = ft_strcat_to(old_line, str_buff, *line);
+	return (1);
 }
