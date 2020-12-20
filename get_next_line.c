@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:53:13 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/11 16:43:15 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/20 16:38:15 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	ret_in_str(char *str)
 */
 static int	error_cases(int fd, char **line)
 {
-	if (fd <= -1 || fd > OPEN_MAX || line == 0 || BUFFER_SIZE <= 0)
+	if (fd <= -1 || fd > FOPEN_MAX || line == 0 || BUFFER_SIZE <= 0)
 		return (1);
 	return (0);
 }
@@ -68,7 +68,7 @@ static char	*save_remainer(char **line, int i)
 /*
 ** 2 possible cases: 
 ** 1) Remainer has no '\n' inside, then we just copy it to *line. Returns 1.
-** 2) remainer has a '\n' inside, then we copy all until it and stop gnl. 
+** 2) remainer has a '\n' inside, then we copy all until it and stop gnl. Ret = 2.
 ** Returns 0 if an error was encountered
 */
 static int	ft_copy_from_remainer(char **remainer, char **line, size_t *line_size)
@@ -88,7 +88,8 @@ static int	ft_copy_from_remainer(char **remainer, char **line, size_t *line_size
 	else
 	{
 		n = ret_in_str(*remainer);
-		temp_remainer = ft_strcpy(&(*remainer)[n + 1]);
+		if (!(temp_remainer = ft_strcpy(&(*remainer)[n + 1])))
+			return (0);
 		(*remainer)[n] = 0;
 		*line_size = ft_strlen(*remainer);
 		if (!ft_save_to_line(line, *remainer, *line_size))
@@ -107,20 +108,21 @@ int				get_next_line(int fd, char **line)
 	char		*str_buff;
 	ssize_t		read_ret;
 	size_t		line_size;
-	int rem;
+	int 		rem;
 
-	if (line != 0 && *line != 0)
-		(*line)[0] = 0;
-	line_size = 0;
-	if (error_cases(fd, line) == 1)
-		return (ft_free(0, remainer, 0, 1));
-	if (!(str_buff = malloc(sizeof(*str_buff) * (BUFFER_SIZE + 1))))
+	if (error_cases(fd, line) == 1 || !(str_buff = malloc(sizeof(*str_buff) * (BUFFER_SIZE + 1))))
 		return (ft_free(str_buff, remainer, 0, 1));
+	if (line != 0)
+	{
+		free (*line);
+		*line = 0;
+	}
+	line_size = 0;
 	if (remainer != 0)
 	{
 		rem = ft_copy_from_remainer(&remainer, line, &line_size);
 		if (rem == 2)
-			return (1);
+			return (ft_free(str_buff, remainer, 1, 0) + 2);
 		else if (rem == 0)
 		{
 			return (ft_free(str_buff, remainer, 1, 1));
@@ -133,27 +135,27 @@ int				get_next_line(int fd, char **line)
 		line_size += BUFFER_SIZE;
 		if (!ft_save_to_line(line, str_buff, line_size))
 		{
-			return (ft_free(str_buff, remainer, 1, 0));
+			return (ft_free(str_buff, remainer, 1, 1));
 		}
 		if (ret_in_str(*line) >= 0)
 			break ;
 	}
 	if (read_ret == -1)
 	{
-		return (ft_free(str_buff, remainer, 1, 0));
+		return (ft_free(str_buff, remainer, 1, 1));
 	}
 	if (read_ret == 0)
 	{
-		return (ft_free(str_buff, remainer, 1, 0) + 1);
+		str_buff[0] = 0;
+		ft_save_to_line(line, str_buff, line_size);
+		return (ft_free(str_buff, remainer, 1, 1) + 1);
 	}
 	if (ret_in_str(*line) >= 0)
 	{
 		if (!(remainer = save_remainer(line, ret_in_str(*line))))
-		{
 			return (ft_free(str_buff, remainer, 1, 1));
-		}
 		(*line)[ret_in_str(*line)] = 0;
 		return (ft_free(str_buff, remainer, 1, 0) + 2);
 	}
-	return (-1);
+	return (ft_free(str_buff, remainer, 1, 1));
 }

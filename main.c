@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:23:07 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/11 16:38:00 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/20 18:26:05 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ int main()
 	// printf("Line 2: %s\n", str);
 	// printf("%d\n",get_next_line(fd, &str));
 	// printf("Last  Line: %s\n", str);
+	free(str);
 	return (0);
 }
 

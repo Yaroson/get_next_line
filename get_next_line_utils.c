@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:58:51 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/11 16:24:54 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/20 14:13:17 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,12 @@ int			ft_save_to_line(char **line, char *str_buff, size_t line_size)
 	if (*line != 0)
 	{
 		if (!(old_line = ft_strcpy(*line)))
+		{
+			*line = 0;
 			return (0);
+		}
 	}
-	free(*line); 
+	//free(*line); 
 	if (!(*line = malloc(sizeof(**line) * (line_size + 1))))
 		return (0);
 	*line = ft_strcat_to(old_line, str_buff, *line);
