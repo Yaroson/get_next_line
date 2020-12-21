@@ -6,23 +6,24 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:53:13 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/20 16:38:15 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/21 15:03:44 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/* 
-** Takes a string, and returns the position of '\n' inside or -1 if no new line
+/*
+** Returns the position of '\n' in the string, -1 otherwise
 */
-static int	ret_in_str(char *str)
+
+static int		ret_in_str(char *str)
 {
 	int i;
 
 	if (str == 0)
 		return (-1);
 	i = 0;
-	while(str[i] != 0)
+	while (str[i] != 0)
 	{
 		if (str[i] == '\n')
 			return (i);
@@ -32,20 +33,11 @@ static int	ret_in_str(char *str)
 }
 
 /*
-** All the possible cases of errors in arguments of get_next_line
-*/
-static int	error_cases(int fd, char **line)
-{
-	if (fd <= -1 || fd > FOPEN_MAX || line == 0 || BUFFER_SIZE <= 0)
-		return (1);
-	return (0);
-}
-
-/*
 ** When there is a '\n' in the middle of the saved line, it saves all after
-** the first '\n' encountered in the static remainer and returns its address 
+** the first '\n' encountered in the static remainer and returns its address
 */
-static char	*save_remainer(char **line, int i)
+
+static char		*save_remainer(char **line, int i)
 {
 	char	*remainer;
 	int		remainer_size;
@@ -59,46 +51,46 @@ static char	*save_remainer(char **line, int i)
 	{
 		remainer[j] = (*line)[i + 1];
 		i++;
-		j++; 
+		j++;
 	}
 	remainer[j] = 0;
+	(*line)[ret_in_str(*line)] = 0;
 	return (remainer);
 }
 
 /*
-** 2 possible cases: 
-** 1) Remainer has no '\n' inside, then we just copy it to *line. Returns 1.
-** 2) remainer has a '\n' inside, then we copy all until it and stop gnl. Ret = 2.
-** Returns 0 if an error was encountered
+** 2 possible cases:
+** -Remainer has no '\n' inside, then we just copy it to *line. Returns 2.
+** -Remainer has a '\n' inside, then we copy all until it and stop gnl. Ret = 1.
+** Returns -1 if an error was encountered
 */
-static int	ft_copy_from_remainer(char **remainer, char **line, size_t *line_size)
+
+static int		ft_copy_from_remainer(char **rem, char **line, size_t *line_s)
 {
-	char *temp_remainer;
-	int n;
+	char	*temp_remainer;
+	int		n;
 
 	temp_remainer = 0;
-	if (ret_in_str(*remainer) < 0)
+	if (ret_in_str(*rem) < 0)
 	{
-		*line_size = ft_strlen(*remainer);
-		if (!ft_save_to_line(line, *remainer, *line_size))
-			return (0);
-		free(*remainer);
-		return (1);
+		*line_s = ft_strlen(*rem);
+		if (!ft_save_to_line(line, *rem, *line_s))
+			return (-1);
+		free(*rem);
+		return (2);
 	}
 	else
 	{
-		n = ret_in_str(*remainer);
-		if (!(temp_remainer = ft_strcpy(&(*remainer)[n + 1])))
-			return (0);
-		(*remainer)[n] = 0;
-		*line_size = ft_strlen(*remainer);
-		if (!ft_save_to_line(line, *remainer, *line_size))
-			return (0);
-		free(*remainer);
-		if(!(*remainer = malloc(sizeof(*remainer) * ft_strlen(temp_remainer))))
-			return (0);
-		*remainer = ft_strcpy(temp_remainer);
-		return (2);
+		n = ret_in_str(*rem);
+		if (!(temp_remainer = ft_strcpy(&(*rem)[n + 1])))
+			return (-1);
+		(*rem)[n] = 0;
+		*line_s = ft_strlen(*rem);
+		if (!ft_save_to_line(line, *rem, *line_s))
+			return (ft_free(temp_remainer, 0, 1, 0) - 1);
+		free(*rem);
+		*rem = temp_remainer;
+		return (1);
 	}
 }
 
@@ -108,54 +100,32 @@ int				get_next_line(int fd, char **line)
 	char		*str_buff;
 	ssize_t		read_ret;
 	size_t		line_size;
-	int 		rem;
+	int			rem;
 
-	if (error_cases(fd, line) == 1 || !(str_buff = malloc(sizeof(*str_buff) * (BUFFER_SIZE + 1))))
-		return (ft_free(str_buff, remainer, 0, 1));
-	if (line != 0)
-	{
-		free (*line);
-		*line = 0;
-	}
+	if (!(str_buff = malloc(sizeof(*str_buff) * (BUFFER_SIZE + 1)))
+		|| fd <= -1 || fd > OPEN_MAX || line == 0 || BUFFER_SIZE <= 0)
+		return (ft_free(str_buff, remainer, 1, 1) - 1);
+	*line = 0;
 	line_size = 0;
 	if (remainer != 0)
 	{
 		rem = ft_copy_from_remainer(&remainer, line, &line_size);
-		if (rem == 2)
-			return (ft_free(str_buff, remainer, 1, 0) + 2);
-		else if (rem == 0)
-		{
-			return (ft_free(str_buff, remainer, 1, 1));
-		}
+		if (rem == 1 || rem == -1)
+			return (ft_free(str_buff, remainer, 1, 0 - rem) + rem);
 		remainer = 0;
 	}
-	while ((read_ret = read(fd, str_buff, BUFFER_SIZE)) > 0)
+	while ((read_ret = read(fd, str_buff, BUFFER_SIZE)) >= 0)
 	{
 		str_buff[read_ret] = 0;
-		line_size += BUFFER_SIZE;
+		line_size += read_ret;
 		if (!ft_save_to_line(line, str_buff, line_size))
-		{
-			return (ft_free(str_buff, remainer, 1, 1));
-		}
-		if (ret_in_str(*line) >= 0)
+			return (ft_free(str_buff, remainer, 1, 1) - 1);
+		if (ret_in_str(*line) >= 0 || read_ret == 0)
 			break ;
 	}
-	if (read_ret == -1)
-	{
-		return (ft_free(str_buff, remainer, 1, 1));
-	}
-	if (read_ret == 0)
-	{
-		str_buff[0] = 0;
-		ft_save_to_line(line, str_buff, line_size);
-		return (ft_free(str_buff, remainer, 1, 1) + 1);
-	}
-	if (ret_in_str(*line) >= 0)
-	{
-		if (!(remainer = save_remainer(line, ret_in_str(*line))))
-			return (ft_free(str_buff, remainer, 1, 1));
-		(*line)[ret_in_str(*line)] = 0;
-		return (ft_free(str_buff, remainer, 1, 0) + 2);
-	}
-	return (ft_free(str_buff, remainer, 1, 1));
+	if (read_ret == -1 || read_ret == 0)
+		return (ft_free(str_buff, remainer, 1, 1) + read_ret);
+	if (!(remainer = save_remainer(line, ret_in_str(*line))))
+		return (ft_free(str_buff, remainer, 1, 1) - 1);
+	return (ft_free(str_buff, remainer, 1, 0) + 1);
 }
