@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:58:51 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 09:06:37 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/22 18:53:08 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t		ft_strlen(char *str)
 }
 
 /*
-** -But wait, it's all strdup? -Always has been.
+** It's actually strdup with a different name (uses malloc)
 */
 
 char		*ft_strcpy(char *line)

@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:53:13 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 11:48:10 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/22 18:45:24 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ ssize_t			ft_remainer(char **rem, char **line, size_t *l_s, char **s_buff)
 
 int				get_next_line(int fd, char **line)
 {
-	static char	*remainer[OPEN_MAX];
+	static char	*remainer[FOPEN_MAX];
 	char		*str_buff;
 	ssize_t		read_ret;
 	size_t		line_size;

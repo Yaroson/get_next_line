@@ -6,25 +6,17 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:55:38 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 11:43:08 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/22 18:51:12 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE
 # define GET_NEXT_LINE
 
-//FOR MALLOC/FREE
 # include <stdlib.h>
-//FOR SSIZE_T && read
 # include <sys/types.h>
-# include <sys/uio.h>
 # include <unistd.h>
-//FOR BUFF_MAX
 # include <limits.h>
-//FOR OPEN
-# include <fcntl.h>
-# include <stdio.h>
-
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE  32
