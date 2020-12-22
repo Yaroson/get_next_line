@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:58:51 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/21 14:14:42 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/22 09:06:37 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t		ft_strlen(char *str)
 }
 
 /*
-** -But wait, is this strdup? -Always has been.
+** -But wait, it's all strdup? -Always has been.
 */
 
 char		*ft_strcpy(char *line)

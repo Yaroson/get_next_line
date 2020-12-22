@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:55:38 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/20 14:13:18 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/22 09:16:42 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@
 //FOR OPEN
 # include <fcntl.h>
 # include <stdio.h>
+
+
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE  32
+#endif
 
 char		*ft_strcpy(char *line);
 int			get_next_line(int fd, char **line);
