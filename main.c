@@ -6,11 +6,13 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/06 14:23:07 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/20 18:26:05 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:29:49 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <string.h>
+#include <stdio.h>
 
 // int main(void)
 // {
@@ -97,13 +99,13 @@ int main()
 	//TO TEST ALL THE LINES AT THE SAME TIME
 	while (printf("\n\nSTART %d\n\n", count), get_next_line(fd, &str) > 0)
 	{
-		str_tab[i] = ft_strcpy(str);
+		strcpy(str_tab[i], str);
 		i++;
 		printf("%d: Line: %s\n", count, str);
 		count++;
 	}
 	printf("%d: Line: %s\n\n\n\n\n", count, str);
-	str_tab[i] = ft_strcpy(str);
+	strcpy(str_tab[i], str);
 	i++;
 	str_tab[i] = 0;
 	i = 0;
