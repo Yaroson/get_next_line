@@ -6,21 +6,18 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:55:38 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 18:51:12 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:15:44 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE
-# define GET_NEXT_LINE
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <sys/types.h>
+# include <sys/uio.h>
 # include <unistd.h>
 # include <limits.h>
-
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE  32
-#endif
 
 char		*ft_strcpy(char *line);
 int			get_next_line(int fd, char **line);

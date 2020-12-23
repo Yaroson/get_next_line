@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:53:13 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 18:45:24 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:18:12 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static int		ft_copy_from_remainer(char **rem, char **line, size_t *line_s)
 ** Checks if there is a remainer left from the previous call of get_next_line.
 ** If there's a remainer, uses ft_copy_from_remainer and returns its value
 ** If there is no remainer, returns 0
-** Returns -1 in case of error 
+** Returns -1 in case of error
 */
 
 ssize_t			ft_remainer(char **rem, char **line, size_t *l_s, char **s_buff)
@@ -118,7 +118,7 @@ ssize_t			ft_remainer(char **rem, char **line, size_t *l_s, char **s_buff)
 
 int				get_next_line(int fd, char **line)
 {
-	static char	*remainer[FOPEN_MAX];
+	static char	*remainer[OPEN_MAX];
 	char		*str_buff;
 	ssize_t		read_ret;
 	size_t		line_size;
@@ -127,7 +127,7 @@ int				get_next_line(int fd, char **line)
 		|| fd <= -1 || fd > OPEN_MAX || line == 0 || BUFFER_SIZE <= 0)
 		return (ft_free(str_buff, remainer[fd], 1, 1) - 1);
 	*line = 0;
-	if ((read_ret = ft_remainer(&(remainer[fd]), line, &line_size, &str_buff)) != 0)
+	if ((read_ret = ft_remainer(&(remainer[fd]), line, &line_size, &str_buff)))
 		return ((int)read_ret);
 	while ((read_ret = read(fd, str_buff, BUFFER_SIZE)) >= 0)
 	{

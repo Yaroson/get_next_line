@@ -6,7 +6,7 @@
 /*   By: ysoroko <ysoroko@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 12:53:13 by ysoroko           #+#    #+#             */
-/*   Updated: 2020/12/22 18:45:18 by ysoroko          ###   ########.fr       */
+/*   Updated: 2020/12/23 11:16:52 by ysoroko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static int		ft_copy_from_remainer(char **rem, char **line, size_t *line_s)
 ** If there is a '\n', copies it to *line and returns 1
 ** If there is no '\n', copies everything and proceeds to gnl. Returns 0.
 ** Also returns 0 if there is no remainer left from previous call of gnl
-** Returns -1 in case of error 
+** Returns -1 in case of error
 */
 
 ssize_t			ft_remainer(char **rem, char **line, size_t *l_s, char **s_buff)
